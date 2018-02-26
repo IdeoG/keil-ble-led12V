@@ -1,0 +1,23 @@
+--cpu Cortex-M3
+"smart-balkony\system_stm32f1xx.o"
+"smart-balkony\stm32f1xx_hal_msp.o"
+"smart-balkony\stm32f1xx_it.o"
+"smart-balkony\main.o"
+"smart-balkony\stm32f1xx_hal_gpio_ex.o"
+"smart-balkony\stm32f1xx_hal_uart.o"
+"smart-balkony\stm32f1xx_hal.o"
+"smart-balkony\stm32f1xx_hal_rcc_ex.o"
+"smart-balkony\stm32f1xx_hal_tim_ex.o"
+"smart-balkony\stm32f1xx_hal_pwr.o"
+"smart-balkony\stm32f1xx_hal_flash_ex.o"
+"smart-balkony\stm32f1xx_hal_dma.o"
+"smart-balkony\stm32f1xx_hal_tim.o"
+"smart-balkony\stm32f1xx_hal_flash.o"
+"smart-balkony\stm32f1xx_hal_rcc.o"
+"smart-balkony\stm32f1xx_hal_gpio.o"
+"smart-balkony\stm32f1xx_hal_cortex.o"
+"smart-balkony\startup_stm32f103xb.o"
+--library_type=microlib --strict --scatter "smart-balkony\smart-balkony.sct"
+--diag_suppress=L6329 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list "smart-balkony.map" -o smart-balkony\smart-balkony.axf
