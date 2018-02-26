@@ -188,6 +188,7 @@ void SysTick_Handler(void)
 
 uint8_t red, green, blue = 0;
 uint8_t mode_level = 0;
+uint8_t mode_led = 0;
 uint8_t cycle_buffer[40] = {0};
 uint8_t cycle_buffer_end = 0;
 /**
@@ -202,27 +203,7 @@ void TIM1_UP_IRQHandler(void)
   /* USER CODE BEGIN TIM1_UP_IRQn 1 */
   if(__HAL_TIM_GET_FLAG(&htim1, TIM_FLAG_UPDATE) != RESET) {
     __HAL_TIM_CLEAR_FLAG(&htim1, TIM_FLAG_UPDATE);
-		
-		for (int i = cycle_buffer_end; i < (cycle_buffer_end+9); i++) {
-			cycle_buffer[i] = buf_rec[i - cycle_buffer_end];
-		}
-		cycle_buffer_end += 9;
-		
-    switch (find_frame(cycle_buffer, cycle_buffer_end)) {
-      case 0:
-				cycle_buffer_end = 0;
-        set_single_color();
-        break;
-      case 1:
-				cycle_buffer_end = 0;
-        set_fade_mode();
-        break;
-      default:
-        if (cycle_buffer_end > 18) cycle_buffer_end = 0;
-        break;
-    }
-		
-		if (cycle_buffer_end > 23) cycle_buffer_end = 0;
+    if (mode_led == 2) set_fade_mode();
 	}
   /* USER CODE END TIM1_UP_IRQn 1 */
 }
@@ -234,9 +215,26 @@ void USART2_IRQHandler(void) {
   /* USER CODE BEGIN USART2_IRQn 0 */
 
   /* USER CODE END USART2_IRQn 0 */
-  HAL_UART_IRQHandler(&huart2);
+  // HAL_UART_IRQHandler(&huart2);
   /* USER CODE BEGIN USART2_IRQn 1 */
-
+  if(USART2->SR & USART_SR_RXNE){
+    __HAL_TIM_CLEAR_FLAG(&huart2, USART_SR_RXNE);
+    if (cycle_buffer_end < 30) cycle_buffer[cycle_buffer_end++] = (uint8_t) USART2->DR;
+    else cycle_buffer_end = 0;
+    switch (find_frame(cycle_buffer, cycle_buffer_end)) {
+      case 0:
+				cycle_buffer_end = 0;
+        mode_led = 1;
+        set_single_color();
+        break;
+      case 1:
+				cycle_buffer_end = 0;
+        mode_led = 2;
+        break;
+      default:
+        break;
+    }
+  }
   /* USER CODE END USART2_IRQn 1 */
 }
 
@@ -292,6 +290,7 @@ void set_single_color() {
 
 
 int find_frame(uint8_t * frame, uint8_t ind) {
+  if (ind < 9) return -1;
 	for (int i=0; i < ind; i++) {
 		if ((*frame == 0xff) && ((*(frame+1)) == 0x47) && (*(frame+2) == 0x00) && (*(frame+3) == 0x00)) {
 			frame += 4;

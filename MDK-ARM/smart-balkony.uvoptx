@@ -208,10 +208,6 @@
       <pMultCmdsp></pMultCmdsp>
       <SystemViewers>
         <Entry>
-          <Name>System Viewer\I2C1</Name>
-          <WinId>35902</WinId>
-        </Entry>
-        <Entry>
           <Name>System Viewer\TIM1</Name>
           <WinId>35905</WinId>
         </Entry>
@@ -222,6 +218,10 @@
         <Entry>
           <Name>System Viewer\TIM4</Name>
           <WinId>35903</WinId>
+        </Entry>
+        <Entry>
+          <Name>System Viewer\USART2</Name>
+          <WinId>35901</WinId>
         </Entry>
       </SystemViewers>
       <DebugDescription>
